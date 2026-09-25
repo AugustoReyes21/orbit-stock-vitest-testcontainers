@@ -68,14 +68,15 @@ document.addEventListener('click', (event) => {
 
 $('#product-form').addEventListener('submit', async (event) => {
   event.preventDefault();
-  const data = new FormData(event.currentTarget);
+  const form = event.currentTarget;
+  const data = new FormData(form);
   try {
     await request('/api/products', { method: 'POST', body: JSON.stringify({
       sku: data.get('sku'), name: data.get('name'),
       initialQuantity: Number(data.get('initialQuantity')), reorderPoint: Number(data.get('reorderPoint')),
     }) });
-    event.currentTarget.reset();
-    event.currentTarget.querySelector('[name=sku]').value = 'ORB-';
+    form.reset();
+    form.querySelector('[name=sku]').value = 'ORB-';
     $('#product-dialog').close();
     toast('Componente registrado en PostgreSQL');
     await loadProducts();
@@ -84,12 +85,13 @@ $('#product-form').addEventListener('submit', async (event) => {
 
 $('#movement-form').addEventListener('submit', async (event) => {
   event.preventDefault();
-  const data = new FormData(event.currentTarget);
+  const form = event.currentTarget;
+  const data = new FormData(form);
   try {
     await request(`/api/products/${state.selectedProduct.id}/movements`, { method: 'POST', body: JSON.stringify({
       type: data.get('type'), quantity: Number(data.get('quantity')), note: data.get('note'),
     }) });
-    event.currentTarget.reset();
+    form.reset();
     $('#movement-dialog').close();
     toast('Movimiento confirmado de forma transaccional');
     await loadProducts();
