@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Orbit Stock, control transaccional de inventario" />
+    <title>Orbit Stock — Mission Inventory</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="noise"></div>
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Orbit Stock inicio">
+        <span class="brand-mark"><i></i></span>
+        <span>ORBIT<span>/STOCK</span></span>
+      </a>
+      <div class="system-state"><span></span> POSTGRES ONLINE</div>
+      <div class="clock" id="clock">00:00:00 GT</div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">MISSION CONTROL · INVENTORY NODE 01</p>
+          <h1>Materiales bajo<br /><em>control orbital.</em></h1>
+          <p class="lede">Registra componentes, monitorea existencias y ejecuta movimientos con integridad transaccional.</p>
+          <button class="primary-action" data-open="product-dialog">
+            <span>+</span> Inicializar componente
+          </button>
+        </div>
+
+        <div class="orbital-visual" aria-hidden="true">
+          <div class="orbit orbit-one"><i></i></div>
+          <div class="orbit orbit-two"><i></i></div>
+          <div class="planet"><span>OS</span><small>NODE 01</small></div>
+          <div class="telemetry t-one">LAT 14.6349°</div>
+          <div class="telemetry t-two">SYNC 100%</div>
+        </div>
+      </section>
+
+      <section class="console" aria-label="Consola de inventario">
+        <div class="console-head">
+          <div>
+            <p class="eyebrow">LIVE TELEMETRY</p>
+            <h2>Estado del inventario</h2>
+          </div>
+          <button id="refresh" class="icon-button" title="Actualizar">↻</button>
+        </div>
+
+        <div class="metrics">
+          <article><span>COMPONENTES</span><strong id="metric-products">00</strong><small>registros activos</small></article>
+          <article><span>UNIDADES</span><strong id="metric-units">000</strong><small>existencia total</small></article>
+          <article class="warning"><span>BAJO UMBRAL</span><strong id="metric-low">00</strong><small>requieren atención</small></article>
+          <div class="pulse-map"><b></b><i></i><span>DATA STREAM<br />ESTABLE</span></div>
+        </div>
+
+        <div class="inventory-shell">
+          <div class="inventory-tools">
+            <label class="search"><span>⌕</span><input id="search" placeholder="BUSCAR POR SKU O NOMBRE" /></label>
+            <span id="result-count">0 SEÑALES</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>IDENTIFICADOR</th><th>COMPONENTE</th><th>EXISTENCIA</th><th>UMBRAL</th><th>ESTADO</th><th></th></tr></thead>
+              <tbody id="inventory-body"></tbody>
+            </table>
+            <div class="empty" id="empty-state">
+              <div class="empty-radar"><i></i></div>
+              <strong>Sin señales registradas</strong>
+              <span>Inicializa el primer componente para comenzar la misión.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="product-dialog">
+      <form id="product-form">
+        <button type="button" class="close" data-close>×</button>
+        <p class="eyebrow">NEW SIGNAL</p>
+        <h2>Inicializar componente</h2>
+        <p class="dialog-intro">Agrega una nueva referencia al inventario orbital.</p>
+        <label>SKU <small>Formato ORB-XXXX</small><input name="sku" value="ORB-" maxlength="16" required /></label>
+        <label>Nombre <input name="name" maxlength="80" placeholder="Ej. Sensor fotónico" required /></label>
+        <div class="form-grid">
+          <label>Existencia inicial <input name="initialQuantity" type="number" min="0" max="10000" value="0" required /></label>
+          <label>Punto de reposición <input name="reorderPoint" type="number" min="0" max="10000" value="5" required /></label>
+        </div>
+        <button class="submit" type="submit">CONFIRMAR REGISTRO <span>→</span></button>
+      </form>
+    </dialog>
+
+    <dialog id="movement-dialog">
+      <form id="movement-form">
+        <button type="button" class="close" data-close>×</button>
+        <p class="eyebrow">STOCK TRANSFER</p>
+        <h2>Registrar movimiento</h2>
+        <p class="dialog-intro" id="movement-product">Componente</p>
+        <div class="type-toggle">
+          <label><input type="radio" name="type" value="IN" checked /><span>↘ ENTRADA</span></label>
+          <label><input type="radio" name="type" value="OUT" /><span>↗ SALIDA</span></label>
+        </div>
+        <label>Cantidad <small>Máximo 1000</small><input name="quantity" type="number" min="1" max="1000" value="1" required /></label>
+        <label>Nota <input name="note" maxlength="120" placeholder="Motivo del movimiento" required /></label>
+        <button class="submit" type="submit">EJECUTAR MOVIMIENTO <span>→</span></button>
+      </form>
+    </dialog>
+
+    <div id="toast" role="status"></div>
+    <script src="/app.js" defer></script>
+  </body>
+</html>

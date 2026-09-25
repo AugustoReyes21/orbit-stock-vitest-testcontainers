@@ -1,0 +1,47 @@
+name: Pruebas automatizadas
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  unit-tests:
+    name: Pruebas unitarias (sin infraestructura)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obtener el código
+        uses: actions/checkout@v4
+
+      - name: Preparar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependencias desde el archivo de bloqueo
+        run: npm ci
+
+      - name: Verificar tipos
+        run: npm run typecheck
+
+      - name: Ejecutar pruebas unitarias con Vitest
+        run: npm run test:unit
+
+  integration-tests:
+    name: Integración (PostgreSQL con Testcontainers)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obtener el código
+        uses: actions/checkout@v4
+
+      - name: Preparar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependencias desde el archivo de bloqueo
+        run: npm ci
+
+      - name: Ejecutar integración con PostgreSQL temporal
+        run: npm run test:integration
